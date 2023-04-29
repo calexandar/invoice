@@ -18,14 +18,13 @@ final readonly class ApprovalFacade implements ApprovalFacadeInterface
 {
     public function __construct(
         private Dispatcher $dispatcher,
-        private InvoiceRepository $invoiceRepository,
     ) {
     }
 
     public function approve(ApprovalDTO $dto): true
     {
         $this->validate($dto);
-        $this->invoiceRepository->updateStatus($dto, StatusEnum::APPROVED);
+
         $this->dispatcher->dispatch(new InvoiceApproved($dto));
 
         return true;
@@ -34,7 +33,7 @@ final readonly class ApprovalFacade implements ApprovalFacadeInterface
     public function reject(ApprovalDTO $dto): true
     {
         $this->validate($dto);
-        $this->invoiceRepository->updateStatus($dto, StatusEnum::REJECTED);
+
         $this->dispatcher->dispatch(new InvoiceRejected($dto));
 
         return true;
